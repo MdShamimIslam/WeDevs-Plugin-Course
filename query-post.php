@@ -5,6 +5,11 @@
 * Description: This is Query Post Plugin
 */
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+
 class MSI_Query_Post {
     private static $instance = null;
 
@@ -27,13 +32,13 @@ class MSI_Query_Post {
 
     private function load_classes() {
         require_once MSI_PLUGIN_PATH . 'includes/Admin_Menu.php';
+        require_once MSI_PLUGIN_PATH . 'includes/Custom_Column.php';
+        // require_once MSI_PLUGIN_PATH . 'includes/PostType-Taxonomy.php';
 
         new MSI_Amin_Menu();
+        new \MSI\Custom_Column();
+        // new MSI\PostType_Taxonomy();
     }
-
-
-
-
     
 }
 
