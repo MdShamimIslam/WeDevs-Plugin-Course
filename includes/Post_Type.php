@@ -13,6 +13,18 @@ class Post_Type{
         add_action ('book_category_edit_form_fields', [$this, 'book_category_edit_form_fields']);
         // save fields in edit texonamy
         add_action ('edited_book_category', [$this, 'edited_book_category']);
+        // create custom metabox
+        add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes'] );
+        // save value in custom metabox 
+        add_action( 'save_post_book', [ $this, 'save_post_book'] ); // save_post hook save the value in all posts
+    
+        // require CMB2
+        if ( file_exists( MSI_PLUGIN_PATH . 'lib\CMB2\init.php' ) ) {
+            require_once MSI_PLUGIN_PATH . 'lib\CMB2\init.php';
+        }
+        // create CMB2
+        add_action( 'cmb2_admin_init', [ $this, 'register_options_metabox'] );
+    
     }
 
     // create post type and taxonomy
@@ -40,7 +52,7 @@ class Post_Type{
             'supports' => ['title', 'editor', 'thumbnail']
         ]);
 
-         //  Category Taxonomy
+        //  Category Taxonomy
         register_taxonomy( 'book_category', 'book', array(
             'labels' => array(
                 'name' => __( 'Categories' ),
@@ -55,7 +67,7 @@ class Post_Type{
             'rewrite'      => array( 'slug' => 'books-categories' )
         ) ) ; 
 
-          //  Tags Taxonomy
+        //  Tags Taxonomy
           register_taxonomy( 'book_tags', 'book', array(
             'labels' => array(
                 'name' => __( 'Tags' ),
@@ -79,6 +91,8 @@ class Post_Type{
     
         $terms = wp_get_post_terms(get_the_ID(), 'book_category');
 
+        $another_title = get_post_meta(get_the_ID(), 'another_title', true);
+
         ob_start();
         ?>
 
@@ -90,14 +104,15 @@ class Post_Type{
                    <?php echo ($term->name);  ?> 
                 </a>
             </li>
-
             <?php endforeach; ?>
         </ul>
+
+        <p>Another Title: <?php echo $another_title ?></p>
         
         <?php
 
         $html  = ob_get_clean();
-    
+     
         return $contents . $html;
     }
 
@@ -122,6 +137,69 @@ class Post_Type{
        
     }
 
+    // create custom metabox
+    public function add_meta_boxes(){
+        add_meta_box(
+			'wporg_box_id',          
+			'My Custom Meta Box',    
+			[$this,'my_custom_box_html'],  
+			'book'                   
+		);
+    }
+
+    // custom metabox callback function
+    public function my_custom_box_html ($post){
+        $sub_title = get_post_meta( $post->ID, 'book_sub_title', true );
+
+        ?>
+            <div>
+                <label>Text Input:</label>
+                <input type="text" name="book_sub_title" value="<?php echo $sub_title; ?>">
+            </div>
+        <?php
+    }
+
+    // save the value in custom metabox only book post type
+    public function save_post_book ( $post_id ) {
+       
+        if ( isset( $_POST['book_sub_title'] ) ) {
+            update_post_meta( $post_id,'book_sub_title', sanitize_text_field( $_POST['book_sub_title'] ) );
+        }
+       
+    }
+
+    // register CMB2 fields
+    public function register_options_metabox() {
+        $box1 = new_cmb2_box( array(
+            'id'           => 'my_custom_box',
+            'title'        => 'My MetaBox',
+            'object_types' => array( 'book' )
+        ) );
+
+        $box1->add_field( array(
+            'id'      => 'another_title',
+            'name'    => 'Another Title',
+            'desc'    => 'Enter Another Title',
+            'type'    => 'text',
+            
+        ) );
+
+        $group_field_id = $box1->add_field( array(
+            'id'      => 'another_group_title',
+            'description'    => 'Enter Another Group Title',
+            'type'    => 'group' 
+        ) );
+        
+        $box1->add_group_field( $group_field_id, array(
+            'id'          => 'another_group_field',
+            'name'        => 'Another Group Field',
+            'description' => 'Enter Another Group Field',
+            'type'        => 'text',
+            'repeatable' => true
+        ) );
+       
+    
+    }
 
 
 }

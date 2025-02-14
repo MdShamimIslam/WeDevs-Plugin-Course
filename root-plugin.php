@@ -1,8 +1,8 @@
 <?php
 
 /*
-* Plugin Name: Query Post
-* Description: This is Query Post Plugin
+* Plugin Name: Root Plugin
+* Description: This is Root Plugin Description
 */
 
 if (!defined('ABSPATH')) {
