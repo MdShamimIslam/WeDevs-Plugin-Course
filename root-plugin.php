@@ -37,10 +37,12 @@ class MSI_Query_Post {
         require_once MSI_PLUGIN_PATH . 'includes/Admin_Menu.php';
         require_once MSI_PLUGIN_PATH . 'includes/Custom_Column.php';
         require_once MSI_PLUGIN_PATH . 'includes/Post_Type.php';
+        require_once MSI_PLUGIN_PATH . 'includes/Book_Reader.php';
 
-        new MSI_Amin_Menu();
-        new MSI\Custom_Column();
-        new MSI\Post_Type();
+        // new MSI_Amin_Menu();
+        // new MSI\Custom_Column();
+        // new MSI\Post_Type();
+        new MSI\Book_Reader();
     }
 
     public function my_plugin_activate() {
