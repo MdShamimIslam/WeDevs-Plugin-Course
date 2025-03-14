@@ -1,0 +1,1 @@
+{"version":3,"file":"main.css","mappings":";;;AACA;EACI;EACA;EACA;AAAJ;;AAGA;EACI;AAAJ,C","sources":["webpack://admin-panel/./assets/crud/main.scss"],"sourcesContent":["\r\n.cd-header{\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: space-between;\r\n}\r\n\r\n.cd-table-wrapper {\r\n    padding-top: 30px;\r\n}"],"names":[],"sourceRoot":""}
